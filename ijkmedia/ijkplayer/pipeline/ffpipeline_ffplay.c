@@ -25,6 +25,10 @@
 #include "ffpipenode_ffplay_vout.h"
 #include "../ff_ffplay.h"
 
+static IJKSDL_Class g_pipeline_class = {
+    .name = "ffpipeline_ffplay",
+};
+
  typedef struct IJKFF_Pipeline_Opaque {
     FFPlayer *ffp;
 } IJKFF_Pipeline_Opaque;
@@ -46,7 +50,7 @@ static IJKFF_Pipenode *func_open_video_output(IJKFF_Pipeline *pipeline, FFPlayer
 
 IJKFF_Pipeline *ffpipeline_create_from_ffplay(FFPlayer *ffp)
 {
-    IJKFF_Pipeline *pipeline = ffpipeline_alloc(sizeof(IJKFF_Pipeline_Opaque));
+    IJKFF_Pipeline *pipeline = ffpipeline_alloc(&g_pipeline_class, sizeof(IJKFF_Pipeline_Opaque));
     if (!pipeline)
         return pipeline;
 

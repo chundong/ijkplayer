@@ -27,7 +27,11 @@
 #include "../../ff_ffplay.h"
 #include "ijksdl/android/ijksdl_android_jni.h"
 
- typedef struct IJKFF_Pipeline_Opaque {
+static IJKSDL_Class g_pipeline_class = {
+    .name = "ffpipeline_android_media",
+};
+
+typedef struct IJKFF_Pipeline_Opaque {
     FFPlayer      *ffp;
     SDL_mutex     *surface_mutex;
     jobject        jsurface;
@@ -64,7 +68,7 @@ static IJKFF_Pipenode *func_open_video_output(IJKFF_Pipeline *pipeline, FFPlayer
 IJKFF_Pipeline *ffpipeline_create_from_android(FFPlayer *ffp)
 {
     ALOGD("ffpipeline_create_from_android()\n");
-    IJKFF_Pipeline *pipeline = ffpipeline_alloc(sizeof(IJKFF_Pipeline_Opaque));
+    IJKFF_Pipeline *pipeline = ffpipeline_alloc(&g_pipeline_class, sizeof(IJKFF_Pipeline_Opaque));
     if (!pipeline)
         return pipeline;
 
@@ -88,6 +92,16 @@ fail:
 
 jobject ffpipeline_get_surface_as_local_ref(JNIEnv *env, IJKFF_Pipeline* pipeline)
 {
+    if (!pipeline || !pipeline->opaque || !pipeline->opaque_class) {
+        ALOGE("%s.ffpipeline_set_surface: invalid pipeline\n", pipeline->opaque_class->name);
+        return NULL;
+    }
+
+    if (pipeline->opaque_class != &g_pipeline_class) {
+        ALOGE("%s.ffpipeline_get_surface_as_local_ref: unsupported method\n", pipeline->opaque_class->name);
+        return NULL;
+    }
+
     IJKFF_Pipeline_Opaque *opaque = pipeline->opaque;
     if (!opaque->surface_mutex)
         return NULL;
@@ -106,6 +120,16 @@ jobject ffpipeline_get_surface_as_local_ref(JNIEnv *env, IJKFF_Pipeline* pipelin
 int ffpipeline_set_surface(JNIEnv *env, IJKFF_Pipeline* pipeline, jobject surface)
 {
     ALOGD("ffpipeline_set_surface()\n");
+    if (!pipeline || !pipeline->opaque || !pipeline->opaque_class) {
+        ALOGE("%s.ffpipeline_set_surface: invalid pipeline\n", pipeline->opaque_class->name);
+        return -1;
+    }
+
+    if (pipeline->opaque_class != &g_pipeline_class) {
+        ALOGE("%s.ffpipeline_set_surface: unsupported method\n", pipeline->opaque_class->name);
+        return -1;
+    }
+
     IJKFF_Pipeline_Opaque *opaque = pipeline->opaque;
     if (!opaque->surface_mutex)
         return -1;

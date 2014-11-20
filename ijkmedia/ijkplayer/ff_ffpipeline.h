@@ -23,20 +23,22 @@
 #ifndef FFPLAY__FF_FFPIPELINE_H
 #define FFPLAY__FF_FFPIPELINE_H
 
+#include "ijksdl/ijksdl_class.h"
 #include "ijksdl/ijksdl_mutex.h"
 #include "ff_ffpipenode.h"
 
 typedef struct IJKFF_Pipeline_Opaque IJKFF_Pipeline_Opaque;
 typedef struct IJKFF_Pipeline IJKFF_Pipeline;
 typedef struct IJKFF_Pipeline {
-    void *opaque;
+    IJKSDL_Class *opaque_class;
+    void         *opaque;
 
     void            (*func_destroy)            (IJKFF_Pipeline *pipeline);
     IJKFF_Pipenode *(*func_open_video_decoder) (IJKFF_Pipeline *pipeline, FFPlayer *ffp);
     IJKFF_Pipenode *(*func_open_video_output)  (IJKFF_Pipeline *pipeline, FFPlayer *ffp);
 } IJKFF_Pipeline;
 
-IJKFF_Pipeline *ffpipeline_alloc(size_t opaque_size);
+IJKFF_Pipeline *ffpipeline_alloc(IJKSDL_Class *opaque_class, size_t opaque_size);
 void ffpipeline_free(IJKFF_Pipeline *pipeline);
 void ffpipeline_free_p(IJKFF_Pipeline **pipeline);
 

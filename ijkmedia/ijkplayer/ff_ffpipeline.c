@@ -22,13 +22,14 @@
 
  #include "ff_ffpipeline.h"
 
-IJKFF_Pipeline *ffpipeline_alloc(size_t opaque_size)
+IJKFF_Pipeline *ffpipeline_alloc(IJKSDL_Class *opaque_class, size_t opaque_size)
 {
     IJKFF_Pipeline *pipeline = (IJKFF_Pipeline*) calloc(1, sizeof(IJKFF_Pipeline));
     if (!pipeline)
         return NULL;
 
-    pipeline->opaque = calloc(1, opaque_size);
+    pipeline->opaque_class = opaque_class;
+    pipeline->opaque       = calloc(1, opaque_size);
     if (!pipeline->opaque) {
         free(pipeline);
         return NULL;

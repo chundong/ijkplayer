@@ -41,9 +41,16 @@ typedef struct IJKFF_Pipenode_Opaque {
     uint8_t                  *orig_extradata;
     int                       orig_extradata_size;
 
+    SDL_Thread               _enqueue_thread;
+    SDL_Thread               *enqueue_thread;
+
     int                       abort_request;
 } IJKFF_Pipenode_Opaque;
 
+static int enqueue_thread_func(void *arg)
+{
+    return 0;
+}
 
 static void func_destroy(IJKFF_Pipenode *node)
 {
@@ -66,6 +73,14 @@ static int func_run_sync(IJKFF_Pipenode *node)
 {
     IJKFF_Pipenode_Opaque *opaque = node->opaque;
 
+    opaque->enqueue_thread = SDL_CreateThreadEx(&opaque->_enqueue_thread, enqueue_thread_func, node, "acodec_vdec_enqueue_thread");
+    if (!opaque->enqueue_thread)
+        goto fallback_to_ffplay;
+
+    SDL_WaitThread(opaque->enqueue_thread, NULL);
+    return ffp_video_thread(opaque->ffp);
+fallback_to_ffplay:
+    ALOGW("fallback to ffplay decoder\n");
     return ffp_video_thread(opaque->ffp);
 }
 
