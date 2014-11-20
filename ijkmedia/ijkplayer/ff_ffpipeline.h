@@ -30,15 +30,15 @@
 typedef struct IJKFF_Pipeline_Opaque IJKFF_Pipeline_Opaque;
 typedef struct IJKFF_Pipeline IJKFF_Pipeline;
 typedef struct IJKFF_Pipeline {
-    IJKSDL_Class *opaque_class;
-    void         *opaque;
+    SDL_Class             *opaque_class;
+    IJKFF_Pipeline_Opaque *opaque;
 
     void            (*func_destroy)            (IJKFF_Pipeline *pipeline);
     IJKFF_Pipenode *(*func_open_video_decoder) (IJKFF_Pipeline *pipeline, FFPlayer *ffp);
     IJKFF_Pipenode *(*func_open_video_output)  (IJKFF_Pipeline *pipeline, FFPlayer *ffp);
 } IJKFF_Pipeline;
 
-IJKFF_Pipeline *ffpipeline_alloc(IJKSDL_Class *opaque_class, size_t opaque_size);
+IJKFF_Pipeline *ffpipeline_alloc(SDL_Class *opaque_class, size_t opaque_size);
 void ffpipeline_free(IJKFF_Pipeline *pipeline);
 void ffpipeline_free_p(IJKFF_Pipeline **pipeline);
 

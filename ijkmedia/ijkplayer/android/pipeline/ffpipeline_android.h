@@ -23,6 +23,7 @@
 #ifndef FFPLAY__FF_FFPIPELINE_ANDROID_H
 #define FFPLAY__FF_FFPIPELINE_ANDROID_H
 
+#include <stdbool.h>
 #include <jni.h>
 #include "../../ff_ffpipeline.h"
 
@@ -33,5 +34,8 @@ IJKFF_Pipeline *ffpipeline_create_from_android(FFPlayer *ffp);
 
 int     ffpipeline_set_surface(JNIEnv *env, IJKFF_Pipeline* pipeline, jobject surface);
 jobject ffpipeline_get_surface_as_local_ref(JNIEnv *env, IJKFF_Pipeline* pipeline);
+
+bool    ffpipeline_is_surface_need_reconfigure(IJKFF_Pipeline* pipeline);
+void    ffpipeline_set_surface_need_reconfigure(IJKFF_Pipeline* pipeline, bool need_reconfigure);
 
 #endif

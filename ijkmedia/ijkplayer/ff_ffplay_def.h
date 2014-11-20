@@ -24,6 +24,7 @@
 #ifndef FFPLAY__FF_FFPLAY_DEF_H
 #define FFPLAY__FF_FFPLAY_DEF_H
 
+#include <stdbool.h>
 #include "ff_ffinc.h"
 #include "ff_ffplay_config.h"
 #include "ff_ffmsg_queue.h"

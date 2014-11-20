@@ -3104,6 +3104,19 @@ long ffp_get_playable_duration_l(FFPlayer *ffp)
     return (long)ffp->playable_duration_ms;
 }
 
+int ffp_packet_queue_get_or_buffering(FFPlayer *ffp, PacketQueue *q, AVPacket *pkt, int *serial, int *finished)
+{
+    return packet_queue_get_or_buffering(ffp, q, pkt, serial, finished);
+}
+
+bool ffp_is_flush_packet(FFPlayer *ffp, AVPacket *pkt)
+{
+    if (!pkt)
+        return false;
+
+    return pkt->data == flush_pkt.data;
+}
+
 void ffp_toggle_buffering_l(FFPlayer *ffp, int buffering_on)
 {
     VideoState *is = ffp->is;

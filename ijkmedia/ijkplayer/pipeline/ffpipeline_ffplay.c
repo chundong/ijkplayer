@@ -25,7 +25,7 @@
 #include "ffpipenode_ffplay_vout.h"
 #include "../ff_ffplay.h"
 
-static IJKSDL_Class g_pipeline_class = {
+static SDL_Class g_pipeline_class = {
     .name = "ffpipeline_ffplay",
 };
 

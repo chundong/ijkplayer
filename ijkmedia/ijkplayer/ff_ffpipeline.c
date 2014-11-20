@@ -22,7 +22,7 @@
 
  #include "ff_ffpipeline.h"
 
-IJKFF_Pipeline *ffpipeline_alloc(IJKSDL_Class *opaque_class, size_t opaque_size)
+IJKFF_Pipeline *ffpipeline_alloc(SDL_Class *opaque_class, size_t opaque_size)
 {
     IJKFF_Pipeline *pipeline = (IJKFF_Pipeline*) calloc(1, sizeof(IJKFF_Pipeline));
     if (!pipeline)

@@ -24,9 +24,10 @@
 #define FFPLAY__FF_FFPIPENODE_ANDROID_MEDIACODEC_VDEC_H
 
 #include "../../ff_ffpipenode.h"
+#include "../../ff_ffpipeline.h"
 
 typedef struct FFPlayer FFPlayer;
 
-IJKFF_Pipenode *ffpipenode_create_video_decoder_from_android_mediacodec(FFPlayer *ffp);
+IJKFF_Pipenode *ffpipenode_create_video_decoder_from_android_mediacodec(FFPlayer *ffp, IJKFF_Pipeline *pipeline);
 
 #endif
