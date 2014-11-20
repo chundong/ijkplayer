@@ -27,6 +27,10 @@
 #include "ijksdl_codec_android_mediaformat_java.h"
 #include "ijksdl_inc_internal_android.h"
 
+static SDL_Class g_amediacodec_class = {
+    .name = "AMediaCodecJava",
+};
+
 typedef struct SDL_AMediaCodec_Opaque {
     jobject android_media_codec;
 
@@ -157,6 +161,12 @@ static sdl_amedia_status_t SDL_AMediaCodecJava_delete(SDL_AMediaCodec* acodec)
 
     SDL_AMediaCodec_Opaque *opaque = (SDL_AMediaCodec_Opaque *)acodec->opaque;
     if (opaque) {
+        if (opaque->android_media_codec) {
+            (*env)->CallVoidMethod(env, opaque->android_media_codec, g_clazz.jmid_release, opaque->android_media_codec);
+            SDL_JNI_CatchException(env);
+            opaque->android_media_codec = NULL;
+        }
+
         SDL_JNI_DeleteGlobalRefP(env, &opaque->output_buffer_info);
         SDL_JNI_DeleteGlobalRefP(env, &opaque->output_buffer_array);
         SDL_JNI_DeleteGlobalRefP(env, &opaque->input_buffer_array);
@@ -357,7 +367,7 @@ ssize_t SDL_AMediaCodecJava_dequeueInputBuffer(SDL_AMediaCodec* acodec, int64_t 
 
 sdl_amedia_status_t SDL_AMediaCodecJava_queueInputBuffer(SDL_AMediaCodec* acodec, size_t idx, off_t offset, size_t size, uint64_t time, uint32_t flags)
 {
-    SDLTRACE("SDL_AMediaCodecJava_queueInputBuffer");
+    SDLTRACE("SDL_AMediaCodecJava_queueInputBuffer: %d", (int)idx);
 
     JNIEnv *env = NULL;
     if (JNI_OK != SDL_JNI_SetupThreadEnv(&env)) {
@@ -461,6 +471,7 @@ SDL_AMediaCodec* SDL_AMediaCodecJava_createDecoderByType(JNIEnv *env, const char
     SDL_AMediaCodec_Opaque *opaque = acodec->opaque;
     opaque->android_media_codec         = global_android_media_codec;
 
+    acodec->opaque_class                = &g_amediacodec_class;
     acodec->func_delete                 = SDL_AMediaCodecJava_delete;
     acodec->func_configure              = NULL;
     acodec->func_configure_surface      = SDL_AMediaCodecJava_configure_surface;

@@ -49,7 +49,9 @@ sdl_amedia_status_t SDL_AMediaCodec_configure(
     uint32_t flags)
 {
     assert(acodec->func_configure);
-    return acodec->func_configure(acodec, aformat, surface, crypto, flags);
+    sdl_amedia_status_t ret = acodec->func_configure(acodec, aformat, surface, crypto, flags);
+    acodec->is_configured = true;
+    return ret;
 }
 
 sdl_amedia_status_t SDL_AMediaCodec_configure_surface(
@@ -61,7 +63,14 @@ sdl_amedia_status_t SDL_AMediaCodec_configure_surface(
     uint32_t flags)
 {
     assert(acodec->func_configure_surface);
-    return acodec->func_configure_surface(env, acodec, aformat, android_surface, crypto, flags);
+    sdl_amedia_status_t ret = acodec->func_configure_surface(env, acodec, aformat, android_surface, crypto, flags);
+    acodec->is_configured = true;
+    return ret;
+}
+
+bool SDL_AMediaCodec_is_configured(SDL_AMediaCodec *acodec)
+{
+    return acodec->is_configured;
 }
 
 sdl_amedia_status_t SDL_AMediaCodec_start(SDL_AMediaCodec* acodec)

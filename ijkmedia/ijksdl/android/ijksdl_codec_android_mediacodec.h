@@ -28,6 +28,7 @@
 #include <stdbool.h>
 #include <jni.h>
 #include <sys/types.h>
+#include "../ijksdl_class.h"
 #include "../ijksdl_mutex.h"
 #include "ijksdl_codec_android_mediadef.h"
 #include "android_nativewindow.h"
@@ -48,7 +49,9 @@ typedef struct SDL_AMediaCodec
 {
     SDL_mutex *mutex;
 
+    SDL_Class              *opaque_class;
     SDL_AMediaCodec_Opaque *opaque;
+    bool                    is_configured;
 
     sdl_amedia_status_t (*func_delete)(SDL_AMediaCodec *acodec);
 
@@ -107,9 +110,12 @@ sdl_amedia_status_t     SDL_AMediaCodec_configure_surface(
     SDL_AMediaCrypto *crypto,
     uint32_t flags);
 
+bool                    SDL_AMediaCodec_is_configured(SDL_AMediaCodec *acodec);
+
 sdl_amedia_status_t     SDL_AMediaCodec_start(SDL_AMediaCodec* acodec);
 sdl_amedia_status_t     SDL_AMediaCodec_stop(SDL_AMediaCodec* acodec);
 sdl_amedia_status_t     SDL_AMediaCodec_flush(SDL_AMediaCodec* acodec);
+sdl_amedia_status_t     SDL_AMediaCodec_release(SDL_AMediaCodec* acodec);
 
 uint8_t*                SDL_AMediaCodec_getInputBuffer(SDL_AMediaCodec* acodec, size_t idx, size_t *out_size);
 uint8_t*                SDL_AMediaCodec_getOutputBuffer(SDL_AMediaCodec* acodec, size_t idx, size_t *out_size);

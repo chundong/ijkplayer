@@ -102,6 +102,7 @@ static sdl_amedia_status_t SDL_AMediaFormatJava_delete(SDL_AMediaFormat* aformat
         return SDL_AMEDIA_OK;
 
     JNIEnv *env = NULL;
+    ALOGE("!!setup env\n");
     if (JNI_OK != SDL_JNI_SetupThreadEnv(&env)) {
         ALOGE("SDL_AMediaFormatJava_delete: SetupThreadEnv failed");
         return SDL_AMEDIA_ERROR_UNKNOWN;
@@ -109,8 +110,10 @@ static sdl_amedia_status_t SDL_AMediaFormatJava_delete(SDL_AMediaFormat* aformat
 
     SDL_AMediaFormat_Opaque *opaque = (SDL_AMediaFormat_Opaque *)aformat->opaque;
     if (opaque) {
-        SDL_JNI_DeleteGlobalRefP(env, &opaque->android_media_format);
+        ALOGE("!!delete android_byte_buffer\n");
         SDL_JNI_DeleteGlobalRefP(env, &opaque->android_byte_buffer);
+        ALOGE("!!delete android_media_format\n");
+        SDL_JNI_DeleteGlobalRefP(env, &opaque->android_media_format);
     }
 
     SDL_AMediaFormat_FreeInternal(aformat);

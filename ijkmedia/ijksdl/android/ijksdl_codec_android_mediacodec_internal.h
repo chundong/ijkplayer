@@ -55,7 +55,7 @@ inline static void SDL_AMediaCodec_FreeInternal(SDL_AMediaCodec *acodec)
         return;
 
     if (acodec->mutex) {
-        SDL_DestroyMutex(acodec->mutex);
+        SDL_DestroyMutexP(&acodec->mutex);
     }
 
     free(acodec->opaque);
